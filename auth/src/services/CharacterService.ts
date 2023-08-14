@@ -1,8 +1,29 @@
 import axios from "axios";
+import ServiceHelper from "../utils/helper";
 
-const characterServiceClient = axios.create({
-  baseURL: "http://characters:3002"
-});
+const serviceHelperConfig = {
+  serviceRegistryUrl: "http://localhost:3000",
+  serviceVersion: "0.0.1"
+}
+const serviceHelper = new ServiceHelper(serviceHelperConfig);
+
+// Declare the variable outside the IIFE so it's accessible later
+let characterServiceClient: any;
+
+(async () => {
+  try {
+    const characterInfo = await serviceHelper.getServiceInfo("org.sog.hq.character");
+    characterServiceClient = axios.create({
+      baseURL: `http://${characterInfo.ip}:${characterInfo.port}`,
+    });
+  } catch (error) {
+    console.log("Error setting up proxies:", error);
+    // Default to a fallback URL if the above fails.
+    characterServiceClient = axios.create({
+      baseURL: "http://localhost/characters",
+    });
+  }
+})();
 
 interface CharacterClient {
   getCharacter(uid: string, index?: number): Promise<any>;
@@ -29,9 +50,9 @@ const CharacterService: CharacterClient = {
 
   async getMessages(uid: string) {
     const pre_number = uid.slice(-6);
-    const key = '0160' + pre_number;
+    const key = "0160" + pre_number;
     return await characterServiceClient.get(`/${key}/messages`);
-  }
-}
+  },
+};
 
 export default CharacterService;

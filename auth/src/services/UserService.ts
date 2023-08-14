@@ -1,4 +1,3 @@
-import axios from "axios";
 import UserRepository from "../database/repository/UserRepository";
 
 class UserService {

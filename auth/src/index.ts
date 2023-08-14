@@ -1,29 +1,54 @@
-import "dotenv/config";
-import express, { Request, Response } from "express";
-import cors from "cors";
-import connectToMongoDB from "./database/MongoDB";
-import { FRONTEND, PORT } from "./config";
-import userRoutes from "./routes/user";
-import errorMiddleware from "./middleware/errorMiddleware";
+import { AddressInfo } from "net";
+import axios from "axios";
+import http from "http";
+import config from "./config";
+import createService from "./services";
+import pjs from '../package.json'
 
-const app = express();
+const { name, version } = pjs;
+const currentConfig = config[process.env.NODE_ENV || "development"];
+const service = createService(currentConfig);
+const server = http.createServer(service);
 
-var corsOptions = {
-  origin: FRONTEND,
-  optionsSuccessStatus: 200,
-};
+server.listen(0);
 
-const StartServer = async () => {
-  app.use(cors(corsOptions));
-  app.use(errorMiddleware);
-  app.use(express.json());
-  app.use("/", userRoutes);
+server.on("listening", () => {
+  const registerService = () =>
+    axios.put(
+      `http://localhost:3000/register/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  const unregisterService = () =>
+    axios.delete(
+      `http://localhost:3000/unregister/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  registerService();
 
-  await connectToMongoDB();
+  const interval = setInterval(registerService, 20 * 1000);
+  const cleanup = async () => {
+    clearInterval(interval);
+    await unregisterService();
+  };
 
-  app.listen(PORT, () => {
-    console.log(`User Micro-Service is Listening on Port ${PORT}`);
+  process.on("uncaughtException", async () => {
+    await cleanup();
+    process.exit(0);
   });
-};
 
-StartServer();
+  process.on("SIGINT", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  process.on("SIGTERM", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  const log = currentConfig.log();
+  log.info(
+    `Auth Micro-Service is Listening on Port ${(server.address() as AddressInfo).port
+    } in ${service.get("env")} mode.`,
+  );
+});

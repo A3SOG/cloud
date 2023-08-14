@@ -48,61 +48,63 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const getCharacterByUserId = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const row = await userService.getUserById(id);
-  // const msg = {
-  //   action: "FETCHUSER",
-  //   data: { row },
-  // };
-  // producer(JSON.stringify(msg));
+const getCharacterByUserId = asyncHandler(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const row = await userService.getUserById(id);
+    // const msg = {
+    //   action: "FETCHUSER",
+    //   data: { row },
+    // };
+    // producer(JSON.stringify(msg));
 
-  if (!row) {
-    res.status(404);
-    throw new Error(`Cannot find user with ID ${id}`);
-  }
+    if (!row) {
+      res.status(404);
+      throw new Error(`Cannot find user with ID ${id}`);
+    }
 
-  const uid = `${row.uid}`;
-  let characterData;
-  try {
-    const response = await CharacterService.getCharacter(uid)
-    characterData = response.data
-  } catch (e) {
-    console.error('Error fetching character data:', e)
-  }
+    const uid = `${row.uid}`;
+    let characterData;
+    try {
+      const response = await CharacterService.getCharacter(uid);
+      characterData = response.data;
+    } catch (e) {
+      console.error("Error fetching character data:", e);
+    }
 
-  let armoryData;
-  try {
-    const response = await CharacterService.getArmory(uid)
-    armoryData = response.data
-  } catch (e) {
-    console.error('Error fetching armory data:', e)
-  }
+    let armoryData;
+    try {
+      const response = await CharacterService.getArmory(uid);
+      armoryData = response.data;
+    } catch (e) {
+      console.error("Error fetching armory data:", e);
+    }
 
-  let garageData;
-  try {
-    const response = await CharacterService.getGarage(uid)
-    garageData = response.data
-  } catch (e) {
-    console.error('Error fetching garage data:', e)
-  }
+    let garageData;
+    try {
+      const response = await CharacterService.getGarage(uid);
+      garageData = response.data;
+    } catch (e) {
+      console.error("Error fetching garage data:", e);
+    }
 
-  let messageData;
-  try {
-    const response = await CharacterService.getMessages(uid)
-    messageData = response.data
-  } catch (e) {
-    console.error('Error fetching message data:', e)
-  }
+    let messageData;
+    try {
+      const response = await CharacterService.getMessages(uid);
+      messageData = response.data;
+    } catch (e) {
+      console.error("Error fetching message data:", e);
+    }
 
-  res.status(200).json({
-    // user: row,
-    character: characterData,
-    armory_unlocks: armoryData,
-    garage_unlocks: garageData,
-    messages: messageData
-  })
-});
+    res.status(200).json({
+      // user: row,
+      character: characterData,
+      armory_unlocks: armoryData,
+      garage_unlocks: garageData,
+      messages: messageData,
+    });
+  },
+);
 
 const getUserById = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -178,4 +180,11 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export { createUser, getAllUsers, getCharacterByUserId, getUserById, updateUser, deleteUser };
+export {
+  createUser,
+  getAllUsers,
+  getCharacterByUserId,
+  getUserById,
+  updateUser,
+  deleteUser,
+};

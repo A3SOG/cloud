@@ -1,26 +1,55 @@
-import "dotenv/config";
-import express, { Request, Response } from "express";
-import cors from "cors";
-import { FRONTEND, PORT } from "./config";
-import characterRoutes from "./routes/character";
-import errorMiddleware from "./middleware/errorMiddleware";
+import axios from "axios";
+import http from "http";
+import { AddressInfo } from "net";
+import config from "./config";
+import createService from "./services";
+import pjs from '../package.json'
 
-const app = express();
+const { name, version } = pjs;
 
-var corsOptions = {
-  origin: FRONTEND,
-  optionsSuccessStatus: 200,
-};
+const currentConfig = config[process.env.NODE_ENV || "development"];
+const service = createService(currentConfig);
+const server = http.createServer(service);
 
-const StartServer = async () => {
-  app.use(cors(corsOptions));
-  app.use(errorMiddleware);
-  app.use(express.json());
-  app.use("/", characterRoutes);
+server.listen(0);
 
-  app.listen(PORT, () => {
-    console.log(`Character Micro-Service is Listening on Port ${PORT}`);
+server.on("listening", () => {
+  const registerService = () =>
+    axios.put(
+      `http://localhost:3000/register/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  const unregisterService = () =>
+    axios.delete(
+      `http://localhost:3000/unregister/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  registerService();
+
+  const interval = setInterval(registerService, 20 * 1000);
+  const cleanup = async () => {
+    clearInterval(interval);
+    await unregisterService();
+  };
+
+  process.on("uncaughtException", async () => {
+    await cleanup();
+    process.exit(0);
   });
-};
 
-StartServer();
+  process.on("SIGINT", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  process.on("SIGTERM", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  const log = currentConfig.log();
+  log.info(
+    `Character Micro-Service is Listening on Port ${(server.address() as AddressInfo).port
+    } in ${service.get("env")} mode.`,
+  );
+});

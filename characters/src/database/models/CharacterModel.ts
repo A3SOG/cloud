@@ -17,9 +17,9 @@ class CharacterModel {
       rounds: number;
     };
   } = {
-      active: 0,
-      data: { classname: "", magazine: "", handgunitems: [], rounds: 0 },
-    };
+    active: 0,
+    data: { classname: "", magazine: "", handgunitems: [], rounds: 0 },
+  };
   phone_number: number = 0;
   rating: number = 0;
   position: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 };

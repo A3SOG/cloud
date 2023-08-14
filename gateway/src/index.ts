@@ -1,29 +1,54 @@
-import "dotenv/config";
-import express, { Request, Response } from "express";
-import cors from "cors";
-import proxy from "express-http-proxy";
-import { FRONTEND, PORT } from "./config";
-// import { AMQP_URL, QUEUE_NAME } from "./config";
-// import createMQConsumer from "./utils/consumer";
+import { AddressInfo } from "net";
+import axios from "axios";
+import http from "http";
+import config, { PORT } from "./config";
+import createService from "./services";
+import pjs from '../package.json'
 
-const app = express();
-// const consumer = createMQConsumer(AMQP_URL as string, QUEUE_NAME as string);
+const { name, version } = pjs;
+const currentConfig = config[process.env.NODE_ENV || "development"];
+const service = createService(currentConfig);
+const server = http.createServer(service);
 
-var corsOptions = {
-  origin: FRONTEND,
-  optionsSuccessStatus: 200,
-};
+server.listen(PORT);
 
-// consumer();
-app.use(cors(corsOptions));
-app.use("/users", proxy("http://auth:3000"));
-app.use("/blog", proxy("http://blog:3001"));
-app.use("/characters", proxy("http://characters:3002"));
+server.on("listening", () => {
+  const registerService = () =>
+    axios.put(
+      `http://localhost:3000/register/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  const unregisterService = () =>
+    axios.delete(
+      `http://localhost:3000/unregister/${name}/${version}/${(server.address() as AddressInfo).port
+      }`,
+    );
+  registerService();
 
-app.get("/", (req: Request, res: Response) => {
-  res.json({ msg: "Welcome to the Gateway" });
-});
+  const interval = setInterval(registerService, 20 * 1000);
+  const cleanup = async () => {
+    clearInterval(interval);
+    await unregisterService();
+  };
 
-app.listen(PORT, () => {
-  console.log(`Gateway is Listening on Port ${PORT}`);
+  process.on("uncaughtException", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  process.on("SIGINT", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  process.on("SIGTERM", async () => {
+    await cleanup();
+    process.exit(0);
+  });
+
+  const log = currentConfig.log();
+  log.info(
+    `User Micro-Service is Listening on Port ${(server.address() as AddressInfo).port
+    } in ${service.get("env")} mode.`,
+  );
 });

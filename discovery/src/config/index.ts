@@ -1,9 +1,7 @@
 import "dotenv/config";
 import dotEnv from "dotenv";
 import bunyan, { LogLevelString } from "bunyan";
-import pjs from '../../package.json'
-
-const { name, version } = pjs;
+import { name, version } from "../../package.json";
 
 if (process.env.NODE_ENV !== "production") {
   const configFile = `./.env.${process.env.NODE_ENV}`;
@@ -14,13 +12,11 @@ if (process.env.NODE_ENV !== "production") {
 
 const AMQP_URL = process.env.AMQP_URL || "";
 const APP_SECRET = process.env.APP_SECRET || "";
+const DB_URL = process.env.MONGODB_URI || "";
 const FRONTEND = process.env.FRONTEND || "";
 const NODE_ENV = process.env.NODE_ENV || "development";
-const PORT = process.env.PORT || "3003";
+const PORT = process.env.PORT || "3000";
 const QUEUE_NAME = process.env.QUEUE_NAME || "";
-const REDIS_HOST = process.env.REDIS_HOST || "";
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD || "";
-const REDIS_PORT = process.env.REDIS_PORT || "";
 
 const getLogger = (
   serviceName: string,
@@ -56,15 +52,5 @@ const config: Record<string, ConfigOptions> = {
   },
 };
 
-export {
-  AMQP_URL,
-  APP_SECRET,
-  FRONTEND,
-  NODE_ENV,
-  PORT,
-  QUEUE_NAME,
-  REDIS_HOST,
-  REDIS_PASSWORD,
-  REDIS_PORT,
-};
+export { AMQP_URL, APP_SECRET, DB_URL, FRONTEND, NODE_ENV, PORT, QUEUE_NAME };
 export default config;

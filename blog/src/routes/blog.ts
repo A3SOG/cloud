@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import {
   createBlog,
   deleteBlog,
@@ -9,9 +9,6 @@ import {
 
 const router = express.Router();
 
-// router.get('/', (req: Request, res: Response) => {
-//   res.json({ "msg": "Welcome to the Blog Micro-Service" })
-// });
 router.post("/", createBlog);
 router.get("/", getAllBlogs);
 router.get("/:id", getBlogById);
