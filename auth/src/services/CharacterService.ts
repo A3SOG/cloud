@@ -7,7 +7,6 @@ const serviceHelperConfig = {
 }
 const serviceHelper = new ServiceHelper(serviceHelperConfig);
 
-// Declare the variable outside the IIFE so it's accessible later
 let characterServiceClient: any;
 
 (async () => {
@@ -17,8 +16,6 @@ let characterServiceClient: any;
       baseURL: `http://${characterInfo.ip}:${characterInfo.port}`,
     });
   } catch (error) {
-    console.log("Error setting up proxies:", error);
-    // Default to a fallback URL if the above fails.
     characterServiceClient = axios.create({
       baseURL: "http://localhost/characters",
     });
