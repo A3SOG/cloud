@@ -48,7 +48,7 @@ server.on("listening", () => {
 
   const log = currentConfig.log();
   log.info(
-    `User Micro-Service is Listening on Port ${(server.address() as AddressInfo).port
+    `Gateway Micro-Service is Listening on Port ${(server.address() as AddressInfo).port
     } in ${service.get("env")} mode.`,
   );
 });

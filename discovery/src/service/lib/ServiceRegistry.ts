@@ -8,12 +8,16 @@ interface Service {
   version: string;
 }
 
+interface Logger {
+  debug(message: string): void;
+}
+
 class ServiceRegistry {
-  private log: any;
+  private log: Logger;
   private services: { [key: string]: Service };
   private readonly timeout: number;
 
-  constructor(log: any) {
+  constructor(log: Logger) {
     this.log = log;
     this.services = {};
     this.timeout = 30;
@@ -21,24 +25,29 @@ class ServiceRegistry {
 
   get(name: string, version: string, port: string): Service | undefined {
     this.cleanup();
-    const candidates = Object.values(this.services).filter(
-      (service) =>
-        service.name === name &&
-        semver.satisfies(service.version, version) &&
-        service.port === port,
-    );
+    const candidates = this.filterServices(name, version, port);
+    return candidates.sort((a, b) => b.timestamp - a.timestamp)[0];
+  }
 
-    return candidates[Math.floor(Math.random() * candidates.length)];
+  gracefulShutdown(signal: string): void {
+    console.log(`Received ${signal}. Shutting down gracefully...`);
+    this.cleanup();
+    Object.keys(this.services).forEach((key) => {
+      delete this.services[key];
+      this.log.debug(`Removed service ${key}`);
+    });
+    // process.exit(0);
+  }
+
+  setupGracefulShutdown(): void {
+    process.on('SIGINT', () => this.gracefulShutdown('SIGINT'));
+    process.on('SIGTERM', () => this.gracefulShutdown('SIGTERM'));
   }
 
   find(name: string, version: string): Service | undefined {
     this.cleanup();
-    const candidates = Object.values(this.services).filter(
-      (service) =>
-        service.name === name && semver.satisfies(service.version, version),
-    );
-
-    return candidates[Math.floor(Math.random() * candidates.length)];
+    const candidates = this.filterServices(name, version);
+    return candidates.sort((a, b) => semver.rcompare(a.version, b.version))[0];
   }
 
   register(name: string, version: string, ip: string, port: string): string {
@@ -83,6 +92,15 @@ class ServiceRegistry {
         this.log.debug(`Removed service ${key}`);
       }
     });
+  }
+
+  private filterServices(name: string, version: string, port?: string): Service[] {
+    return Object.values(this.services).filter(
+      (service) =>
+        service.name === name &&
+        semver.satisfies(service.version, version) &&
+        (!port || service.port === port),
+    );
   }
 }
 

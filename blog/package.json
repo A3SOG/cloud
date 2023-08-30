@@ -27,6 +27,7 @@
     "winston": "^3.10.0"
   },
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
     "@types/amqplib": "^0.10.1",
     "@types/axios": "^0.14.0",
     "@types/bunyan": "^1.8.8",
@@ -36,6 +37,9 @@
     "@types/node": "^20.4.9",
     "@types/uuid": "^9.0.2",
     "@types/winston": "^2.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "eslint": "^8.48.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.1",
     "ts-node": "^10.9.1",
