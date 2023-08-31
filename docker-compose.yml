@@ -10,13 +10,14 @@ services:
       - ./auth/.env
     depends_on:
       - mongodb
+      - discovery
     volumes:
       - ./auth/:/app
       - /auth/node_modules
     expose:
-      - 3000
+      - 3001
     ports:
-      - '3000:3000'
+      - '3001:3001'
     networks:
       - microservices
     restart: unless-stopped
@@ -32,13 +33,14 @@ services:
     depends_on:
       - mongodb
       - auth
+      - discovery
     volumes:
       - ./blog:/app
       - /blog/node_modules
     expose:
-      - 3001
+      - 3002
     ports:
-      - '3001:3001'
+      - '3002:3002'
     networks:
       - microservices
     restart: unless-stopped
@@ -52,15 +54,33 @@ services:
     env_file:
       - ./characters/.env
     depends_on:
-      - mongodb
-      - auth
+      - discovery
     volumes:
       - ./characters:/app
       - /characters/node_modules
     expose:
-      - 3002
+      - 3003
     ports:
-      - '3002:3002'
+      - '3003:3003'
+    networks:
+      - microservices
+    restart: unless-stopped
+  discovery:
+    build:
+      context: ./discovery
+      dockerfile: Dockerfile
+      target: production
+    container_name: discovery
+    command: npm run start:dev
+    env_file:
+      - ./discovery/.env
+    volumes:
+      - ./discovery/:/app
+      - /discovery/node_modules
+    expose:
+      - 3000
+    ports:
+      - '3000:3000'
     networks:
       - microservices
     restart: unless-stopped
@@ -77,6 +97,7 @@ services:
       - auth
       - blog
       - characters
+      - discovery
     volumes:
       - ./gateway:/app
       - /gateway/node_modules

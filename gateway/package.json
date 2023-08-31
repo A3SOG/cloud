@@ -7,7 +7,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "format": "prettier --write \"./**/*.ts\"",
-    "start": "ts-node src/index.ts | bunyan",
+    "start": "ts-node index.ts | bunyan",
     "start:dev": "nodemon",
     "start:prod": "npm run build && node dist/index.js"
   },
