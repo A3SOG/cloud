@@ -1,39 +1,39 @@
-import express, { NextFunction, Request, Response } from "express";
-import cors from "cors";
-import characterRoutes from "../routes/character";
-import errorMiddleware from "../middleware/errorMiddleware";
+import express, { NextFunction, Request, Response } from 'express'
+import cors from 'cors'
+import characterRoutes from '../routes/character'
+import errorMiddleware from '../middleware/errorMiddleware'
 
-const service = express();
+const service = express()
 
 export default (config: any) => {
-  const log = config.log();
+  const log = config.log()
 
-  if (service.get("env") === "development") {
+  if (service.get('env') === 'development') {
     service.use((req: Request, res: Response, next: NextFunction) => {
-      log.debug(`${req.method}: ${req.url}`);
-      return next();
-    });
+      log.debug(`${req.method}: ${req.url}`)
+      return next()
+    })
   }
 
   const StartServer = async () => {
-    service.use(cors());
-    service.use(errorMiddleware);
-    service.use(express.json());
-    service.use("/", characterRoutes);
+    service.use(cors())
+    service.use(errorMiddleware)
+    service.use(express.json())
+    service.use('/', characterRoutes)
     service.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {
-        res.status(error.status || 500);
-        log.error(error);
+        res.status(error.status || 500)
+        log.error(error)
         return res.json({
           error: {
-            message: error.message,
-          },
-        });
-      },
-    );
-  };
+            message: error.message
+          }
+        })
+      }
+    )
+  }
 
-  StartServer();
+  StartServer()
 
-  return service;
-};
+  return service
+}

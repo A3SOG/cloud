@@ -1,66 +1,66 @@
-import UserModel from "../models/User";
+import UserModel from '../models/User'
 
 class UserRepository {
   async create({ uid, name }: { uid: string; name: string }): Promise<any> {
     try {
       const user = new UserModel({
         uid,
-        name,
-      });
-      return await user.save();
+        name
+      })
+      return await user.save()
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async findAll(): Promise<any> {
     try {
-      return await UserModel.find();
+      return await UserModel.find()
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async findById(id: string): Promise<any> {
     try {
-      const user = await UserModel.findById(id);
+      const user = await UserModel.findById(id)
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found')
       }
-      return user;
+      return user
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async update(
     _id: string,
-    data: { uid?: string; name?: string },
+    data: { uid?: string; name?: string }
   ): Promise<any> {
     try {
       const user = await UserModel.findOneAndUpdate({ _id }, data, {
-        new: true,
-      });
+        new: true
+      })
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found')
       }
-      return user;
+      return user
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async delete(_id: string): Promise<any> {
     try {
-      const user = await UserModel.findOneAndDelete({ _id });
+      const user = await UserModel.findOneAndDelete({ _id })
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found')
       }
-      return { message: "User deleted successfully" };
+      return { message: 'User deleted successfully' }
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 }
 
-export default UserRepository;
+export default UserRepository

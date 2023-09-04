@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import asyncHandler from "express-async-handler";
-import CharacterService from "../services/CharacterService";
-import UserService from "../services/UserService";
+import { Request, Response } from 'express'
+import asyncHandler from 'express-async-handler'
+import CharacterService from '../services/CharacterService'
+import UserService from '../services/UserService'
 // import createMQProducer from "../utils/producer";
 // import { AMQP_URL, QUEUE_NAME } from "../config";
 
-const userService = new UserService();
+const userService = new UserService()
 // const producer = createMQProducer(AMQP_URL as string, QUEUE_NAME as string);
 
 const createUser = asyncHandler(async (req: Request, res: Response) => {
-  const row = await userService.createUser(req.body);
+  const row = await userService.createUser(req.body)
   // const msg = {
   //   action: "CREATEUSER",
   //   data: { row },
@@ -17,19 +17,19 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
   // producer(JSON.stringify(msg));
 
   try {
-    res.status(201).json(row);
+    res.status(201).json(row)
   } catch (e) {
-    res.status(500);
+    res.status(500)
     if (e instanceof Error) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     } else {
-      throw e;
+      throw e
     }
   }
-});
+})
 
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-  const rows = await userService.getAllUsers();
+  const rows = await userService.getAllUsers()
   // const msg = {
   //   action: "FETCHUSERS",
   //   data: { rows },
@@ -37,21 +37,21 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   // producer(JSON.stringify(msg));
 
   try {
-    res.json(rows);
+    res.json(rows)
   } catch (e) {
-    res.status(500);
+    res.status(500)
     if (e instanceof Error) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     } else {
-      throw e;
+      throw e
     }
   }
-});
+})
 
 const getCharacterByUserId = asyncHandler(
   async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const row = await userService.getUserById(id);
+    const id = req.params.id
+    const row = await userService.getUserById(id)
     // const msg = {
     //   action: "FETCHUSER",
     //   data: { row },
@@ -59,41 +59,41 @@ const getCharacterByUserId = asyncHandler(
     // producer(JSON.stringify(msg));
 
     if (!row) {
-      res.status(404);
-      throw new Error(`Cannot find user with ID ${id}`);
+      res.status(404)
+      throw new Error(`Cannot find user with ID ${id}`)
     }
 
-    const uid = `${row.uid}`;
-    let characterData;
+    const uid = `${row.uid}`
+    let characterData
     try {
-      const response = await CharacterService.getCharacter(uid);
-      characterData = response.data;
+      const response = await CharacterService.getCharacter(uid)
+      characterData = response.data
     } catch (e) {
-      console.error("Error fetching character data:", e);
+      console.error('Error fetching character data:', e)
     }
 
-    let armoryData;
+    let armoryData
     try {
-      const response = await CharacterService.getArmory(uid);
-      armoryData = response.data;
+      const response = await CharacterService.getArmory(uid)
+      armoryData = response.data
     } catch (e) {
-      console.error("Error fetching armory data:", e);
+      console.error('Error fetching armory data:', e)
     }
 
-    let garageData;
+    let garageData
     try {
-      const response = await CharacterService.getGarage(uid);
-      garageData = response.data;
+      const response = await CharacterService.getGarage(uid)
+      garageData = response.data
     } catch (e) {
-      console.error("Error fetching garage data:", e);
+      console.error('Error fetching garage data:', e)
     }
 
-    let messageData;
+    let messageData
     try {
-      const response = await CharacterService.getMessages(uid);
-      messageData = response.data;
+      const response = await CharacterService.getMessages(uid)
+      messageData = response.data
     } catch (e) {
-      console.error("Error fetching message data:", e);
+      console.error('Error fetching message data:', e)
     }
 
     res.status(200).json({
@@ -101,14 +101,14 @@ const getCharacterByUserId = asyncHandler(
       character: characterData,
       armory_unlocks: armoryData,
       garage_unlocks: garageData,
-      messages: messageData,
-    });
-  },
-);
+      messages: messageData
+    })
+  }
+)
 
 const getUserById = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const row = await userService.getUserById(id);
+  const id = req.params.id
+  const row = await userService.getUserById(id)
   // const msg = {
   //   action: "FETCHUSER",
   //   data: { row },
@@ -117,25 +117,25 @@ const getUserById = asyncHandler(async (req: Request, res: Response) => {
 
   try {
     if (row) {
-      res.status(200).json(row);
+      res.status(200).json(row)
     } else {
-      res.status(404);
-      throw new Error(`Cannot find user with ID ${id}`);
+      res.status(404)
+      throw new Error(`Cannot find user with ID ${id}`)
     }
   } catch (e) {
-    res.status(500);
+    res.status(500)
     if (e instanceof Error) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     } else {
-      throw e;
+      throw e
     }
   }
-});
+})
 
 const updateUser = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { uid, name } = req.body;
-  const row = await userService.updateUser(id, { uid, name });
+  const { id } = req.params
+  const { uid, name } = req.body
+  const row = await userService.updateUser(id, { uid, name })
   // const msg = {
   //   action: "UPDATEUSER",
   //   data: { row },
@@ -143,20 +143,20 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
   // producer(JSON.stringify(msg));
 
   try {
-    res.json(row);
+    res.json(row)
   } catch (e) {
-    res.status(500);
+    res.status(500)
     if (e instanceof Error) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     } else {
-      throw e;
+      throw e
     }
   }
-});
+})
 
 const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const row = await userService.deleteUser(id);
+  const id = req.params.id
+  const row = await userService.deleteUser(id)
   // const msg = {
   //   action: "DELETEUSER",
   //   data: { row },
@@ -165,20 +165,20 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
   try {
     if (row) {
-      res.status(200).json(row);
+      res.status(200).json(row)
     } else {
-      res.status(404);
-      throw new Error(`Cannot find user with ID ${id}`);
+      res.status(404)
+      throw new Error(`Cannot find user with ID ${id}`)
     }
   } catch (e) {
-    res.status(500);
+    res.status(500)
     if (e instanceof Error) {
-      throw new Error(e.message);
+      throw new Error(e.message)
     } else {
-      throw e;
+      throw e
     }
   }
-});
+})
 
 export {
   createUser,
@@ -186,5 +186,5 @@ export {
   getCharacterByUserId,
   getUserById,
   updateUser,
-  deleteUser,
-};
+  deleteUser
+}

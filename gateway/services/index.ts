@@ -1,68 +1,73 @@
-import express, { NextFunction, Request, Response } from "express";
-import cors from "cors";
-import proxy from "express-http-proxy";
-import ServiceHelper from "../utils/helper";
+import express, { NextFunction, Request, Response } from 'express'
+import cors from 'cors'
+import proxy from 'express-http-proxy'
+import ServiceHelper from '../utils/helper'
 
-const service = express();
+const service = express()
 
 export default (config: any) => {
-  const log = config.log();
+  const log = config.log()
 
-  if (service.get("env") === "development") {
+  if (service.get('env') === 'development') {
     service.use((req: Request, res: Response, next: NextFunction) => {
-      log.debug(`${req.method}: ${req.url}`);
-      return next();
-    });
+      log.debug(`${req.method}: ${req.url}`)
+      return next()
+    })
   }
 
   const StartServer = async () => {
     const serviceHelperConfig = {
-      serviceRegistryUrl: "http://discovery:3000",
-      serviceVersion: "0.0.1"
+      serviceRegistryUrl: 'http://discovery:3000',
+      serviceVersion: '0.0.1'
     }
-    const serviceHelper = new ServiceHelper(serviceHelperConfig);
+    const serviceHelper = new ServiceHelper(serviceHelperConfig)
 
-    service.use(cors());
+    service.use(cors())
 
-    service.get("/", (req: Request, res: Response) => {
-      res.json({ msg: "Welcome to the Gateway" });
-    });
+    service.get('/', (req: Request, res: Response) => {
+      res.json({ msg: 'Welcome to the Gateway' })
+    })
 
     const refreshServiceInfo = async () => {
       try {
-        const authInfo = await serviceHelper.getServiceInfo("org.sog.hq.auth");
-        const blogInfo = await serviceHelper.getServiceInfo("org.sog.hq.blog");
-        const characterInfo = await serviceHelper.getServiceInfo("org.sog.hq.character");
+        const authInfo = await serviceHelper.getServiceInfo('org.sog.hq.auth')
+        const blogInfo = await serviceHelper.getServiceInfo('org.sog.hq.blog')
+        const characterInfo = await serviceHelper.getServiceInfo(
+          'org.sog.hq.character'
+        )
 
-        service.use("/users", proxy(`http://${authInfo.ip}:${authInfo.port}`));
-        service.use("/blog", proxy(`http://${blogInfo.ip}:${blogInfo.port}`));
-        service.use("/characters", proxy(`http://${characterInfo.ip}:${characterInfo.port}`));
+        service.use('/users', proxy(`http://${authInfo.ip}:${authInfo.port}`))
+        service.use('/blog', proxy(`http://${blogInfo.ip}:${blogInfo.port}`))
+        service.use(
+          '/characters',
+          proxy(`http://${characterInfo.ip}:${characterInfo.port}`)
+        )
         // console.log(`Updated Micro-Services: \nAuth Micro-Service: ${JSON.stringify(authInfo)}\nBlog Micro-Service: ${JSON.stringify(blogInfo)}\nCharacter Micro-Service: ${JSON.stringify(characterInfo)}`)
       } catch (error) {
-        log.error("Error setting up proxies:", error);
+        log.error('Error setting up proxies:', error)
       }
-    };
+    }
 
     // Initial fetch of service info
-    await refreshServiceInfo();
+    await refreshServiceInfo()
 
     // Refresh service info every minute
-    setInterval(refreshServiceInfo, 60 * 1000);
+    setInterval(refreshServiceInfo, 60 * 1000)
 
     service.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {
-        res.status(error.status || 500);
-        log.error(error);
+        res.status(error.status || 500)
+        log.error(error)
         return res.json({
           error: {
-            message: error.message,
-          },
-        });
-      },
-    );
-  };
+            message: error.message
+          }
+        })
+      }
+    )
+  }
 
-  StartServer();
+  StartServer()
 
-  return service;
-};
+  return service
+}

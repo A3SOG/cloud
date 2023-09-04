@@ -1,4 +1,4 @@
-import BlogModel from "../models/Blog";
+import BlogModel from '../models/Blog'
 
 class BlogRepository {
   async create({
@@ -8,15 +8,15 @@ class BlogRepository {
     image,
     summary,
     content,
-    tags,
+    tags
   }: {
-    title: string;
-    date: Date;
-    author: string;
-    image: string;
-    summary: string;
-    content: string;
-    tags: [string];
+    title: string
+    date: Date
+    author: string
+    image: string
+    summary: string
+    content: string
+    tags: [string]
   }): Promise<any> {
     try {
       const blog = new BlogModel({
@@ -26,70 +26,70 @@ class BlogRepository {
         image,
         summary,
         content,
-        tags,
-      });
-      return await blog.save();
+        tags
+      })
+      return await blog.save()
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async findAll(): Promise<any> {
     try {
-      return await BlogModel.find();
+      return await BlogModel.find()
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async findById(id: string): Promise<any> {
     try {
-      const blog = await BlogModel.findById(id);
+      const blog = await BlogModel.findById(id)
       if (!blog) {
-        throw new Error("Blog not found");
+        throw new Error('Blog not found')
       }
-      return blog;
+      return blog
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async update(
     _id: string,
     data: {
-      title?: string;
-      date?: Date;
-      author?: string;
-      image?: string;
-      summary?: string;
-      content?: string;
-      tags?: [string];
-    },
+      title?: string
+      date?: Date
+      author?: string
+      image?: string
+      summary?: string
+      content?: string
+      tags?: [string]
+    }
   ): Promise<any> {
     try {
       const blog = await BlogModel.findOneAndUpdate({ _id }, data, {
-        new: true,
-      });
+        new: true
+      })
       if (!blog) {
-        throw new Error("Blog not found");
+        throw new Error('Blog not found')
       }
-      return blog;
+      return blog
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async delete(_id: string): Promise<any> {
     try {
-      const blog = await BlogModel.findOneAndDelete({ _id });
+      const blog = await BlogModel.findOneAndDelete({ _id })
       if (!blog) {
-        throw new Error("Blog not found");
+        throw new Error('Blog not found')
       }
-      return { message: "Blog deleted successfully" };
+      return { message: 'Blog deleted successfully' }
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 }
 
-export default BlogRepository;
+export default BlogRepository

@@ -1,29 +1,29 @@
-import { config as dotEnvConfig } from "dotenv";
-import bunyan, { LogLevelString } from "bunyan";
+import { config as dotEnvConfig } from 'dotenv'
+import bunyan, { LogLevelString } from 'bunyan'
 import pjs from '../package.json'
 
-const { name, version } = pjs;
+const { name, version } = pjs
 
-const NODE_ENV = process.env.NODE_ENV || "development";
-dotEnvConfig({ path: `./.env.${NODE_ENV}` });
+const NODE_ENV = process.env.NODE_ENV || 'development'
+dotEnvConfig({ path: `./.env.${NODE_ENV}` })
 
-const FRONTEND = process.env.FRONTEND || "";
-const PORT = process.env.PORT || "3003";
-const REDIS_HOST = process.env.REDIS_HOST || "";
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD || "";
-const REDIS_PORT = process.env.REDIS_PORT || "";
+const FRONTEND = process.env.FRONTEND || ''
+const PORT = process.env.PORT || '3003'
+const REDIS_HOST = process.env.REDIS_HOST || ''
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD || ''
+const REDIS_PORT = process.env.REDIS_PORT || ''
 
 const getLogger = (
   serviceName: string,
   serviceVersion: string,
-  level: LogLevelString,
-) => bunyan.createLogger({ name: `${serviceName}:${serviceVersion}`, level });
+  level: LogLevelString
+) => bunyan.createLogger({ name: `${serviceName}:${serviceVersion}`, level })
 
 interface ConfigOptions {
-  name: string;
-  version: string;
-  serviceTimeout: number;
-  log: () => bunyan;
+  name: string
+  version: string
+  serviceTimeout: number
+  log: () => bunyan
 }
 
 const config: Record<string, ConfigOptions> = {
@@ -31,28 +31,21 @@ const config: Record<string, ConfigOptions> = {
     name,
     version,
     serviceTimeout: 30,
-    log: () => getLogger(name, version, "debug"),
+    log: () => getLogger(name, version, 'debug')
   },
   production: {
     name,
     version,
     serviceTimeout: 30,
-    log: () => getLogger(name, version, "info"),
+    log: () => getLogger(name, version, 'info')
   },
   test: {
     name,
     version,
     serviceTimeout: 30,
-    log: () => getLogger(name, version, "fatal"),
-  },
-};
+    log: () => getLogger(name, version, 'fatal')
+  }
+}
 
-export {
-  FRONTEND,
-  NODE_ENV,
-  PORT,
-  REDIS_HOST,
-  REDIS_PASSWORD,
-  REDIS_PORT,
-};
-export default config;
+export { FRONTEND, NODE_ENV, PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT }
+export default config
