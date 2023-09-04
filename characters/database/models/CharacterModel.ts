@@ -104,8 +104,44 @@ class CharacterModel {
         case "Phone_Number":
           this.phone_number = value as number;
           break;
+        case "Rating":
+          this.rating = value as number;
+          break;
         case "Position":
           this.position = { x: value[0], y: value[1], z: value[2] };
+          break;
+        case "Direction":
+          this.direction = value as number;
+          break;
+        case "CurrentWeapon":
+          this.currentWeapon = value as string;
+          break;
+        case "Stance":
+          this.stance = value as string;
+          break;
+        case "Uniform":
+          this.uniform = value as string;
+          break;
+        case "Vest":
+          this.vest = value as string;
+          break;
+        case "Backpack":
+          this.backpack = value as string;
+          break;
+        case "Goggles":
+          this.goggles = value as string;
+          break;
+        case "Headgear":
+          this.headgear = value as string;
+          break;
+        case "PrimaryWeapon":
+          this.primaryWeapon = value as string;
+          break;
+        case "SecondaryWeapon":
+          this.secondaryWeapon = value as string;
+          break;
+        case "HandgunWeapon":
+          this.handgunWeapon = value as string;
           break;
         case "PrimaryWeaponItems":
           this.primaryWeaponItems = value.map((item: string) => item);

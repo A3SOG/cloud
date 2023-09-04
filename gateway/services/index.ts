@@ -37,7 +37,7 @@ export default (config: any) => {
         service.use("/users", proxy(`http://${authInfo.ip}:${authInfo.port}`));
         service.use("/blog", proxy(`http://${blogInfo.ip}:${blogInfo.port}`));
         service.use("/characters", proxy(`http://${characterInfo.ip}:${characterInfo.port}`));
-        console.log(`Updated Micro-Services: \nAuth Micro-Service: ${JSON.stringify(authInfo)}\nBlog Micro-Service: ${JSON.stringify(blogInfo)}\nCharacter Micro-Service: ${JSON.stringify(characterInfo)}`)
+        // console.log(`Updated Micro-Services: \nAuth Micro-Service: ${JSON.stringify(authInfo)}\nBlog Micro-Service: ${JSON.stringify(blogInfo)}\nCharacter Micro-Service: ${JSON.stringify(characterInfo)}`)
       } catch (error) {
         log.error("Error setting up proxies:", error);
       }
