@@ -51,7 +51,7 @@ server.on('listening', () => {
 
   const log = currentConfig.log()
   log.info(
-    `Character Micro-Service is Listening on Port ${
+    `RSS Micro-Service is Listening on Port ${
       (server.address() as AddressInfo).port
     } in ${service.get('env')} mode.`
   )

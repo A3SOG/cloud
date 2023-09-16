@@ -29,30 +29,41 @@ export default (config: any) => {
     })
 
     const refreshServiceInfo = async () => {
-      try {
-        const authInfo = await serviceHelper.getServiceInfo('org.sog.hq.auth')
-        const blogInfo = await serviceHelper.getServiceInfo('org.sog.hq.blog')
-        const characterInfo = await serviceHelper.getServiceInfo(
-          'org.sog.hq.character'
-        )
-
-        service.use('/users', proxy(`http://${authInfo.ip}:${authInfo.port}`))
-        service.use('/blog', proxy(`http://${blogInfo.ip}:${blogInfo.port}`))
-        service.use(
-          '/characters',
-          proxy(`http://${characterInfo.ip}:${characterInfo.port}`)
-        )
-        // console.log(`Updated Micro-Services: \nAuth Micro-Service: ${JSON.stringify(authInfo)}\nBlog Micro-Service: ${JSON.stringify(blogInfo)}\nCharacter Micro-Service: ${JSON.stringify(characterInfo)}`)
-      } catch (error) {
-        log.error('Error setting up proxies:', error)
-      }
+      serviceHelper.getServiceInfo('org.sog.hq.auth')
+        .then(authInfo => {
+          serviceHelper.getServiceInfo('org.sog.hq.blog')
+            .then(blogInfo => {
+              serviceHelper.getServiceInfo('org.sog.hq.character')
+                .then(characterInfo => {
+                  serviceHelper.getServiceInfo('org.sog.hq.rss')
+                    .then(rssInfo => {
+                      service.use('/users', proxy(`http://${authInfo.ip}:${authInfo.port}`))
+                      service.use('/blog', proxy(`http://${blogInfo.ip}:${blogInfo.port}`))
+                      service.use('/characters', proxy(`http://${characterInfo.ip}:${characterInfo.port}`))
+                      service.use('/rss', proxy(`http://${rssInfo.ip}:${rssInfo.port}`))
+                    })
+                    .catch(error => {
+                      log.error('Error setting up proxies:', error)
+                    })
+                })
+                .catch(error => {
+                  log.error('Error setting up proxies:', error)
+                })
+            })
+            .catch(error => {
+              log.error('Error setting up proxies:', error)
+            })
+        })
+        .catch(error => {
+          log.error('Error setting up proxies:', error)
+        })
     }
 
     // Initial fetch of service info
     await refreshServiceInfo()
 
     // Refresh service info every minute
-    setInterval(refreshServiceInfo, 60 * 1000)
+    setInterval(refreshServiceInfo, 75 * 1000)
 
     service.use(
       (error: any, req: Request, res: Response, next: NextFunction) => {

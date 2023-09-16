@@ -109,6 +109,30 @@ services:
     networks:
       - microservices
     restart: unless-stopped
+  rss:
+    build:
+      context: ./rss
+      dockerfile: Dockerfile
+      target: development
+    container_name: rss
+    command: npm run start:dev
+    env_file:
+      - ./rss/.env
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - rabbitmq
+    volumes:
+      - ./rss:/app
+      - /rss/node_modules
+    expose:
+      - 3004
+    ports:
+      - '3004:3004'
+    networks:
+      - microservices
+    restart: unless-stopped
 
   mongodb-primary:
     image: docker.io/bitnami/mongodb:latest

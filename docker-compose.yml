@@ -108,6 +108,28 @@ services:
     networks:
       - microservices
     restart: unless-stopped
+  rss:
+    build:
+      context: ./rss
+      dockerfile: Dockerfile
+      target: production
+    container_name: rss
+    command: npm run start:dev
+    env_file:
+      - ./rss/.env
+    depends_on:
+      - mongodb
+      - discovery
+    volumes:
+      - ./rss:/app
+      - /rss/node_modules
+    expose:
+      - 3004
+    ports:
+      - '3004:3004'
+    networks:
+      - microservices
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
