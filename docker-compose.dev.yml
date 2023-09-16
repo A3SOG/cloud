@@ -17,9 +17,9 @@ services:
       - ./auth/:/app
       - /auth/node_modules
     expose:
-      - 3000
+      - 3001
     ports:
-      - '3000:3000'
+      - '3001:3001'
     networks:
       - microservices
     restart: unless-stopped
@@ -42,9 +42,9 @@ services:
       - ./blog:/app
       - /blog/node_modules
     expose:
-      - 3001
+      - 3002
     ports:
-      - '3001:3001'
+      - '3002:3002'
     networks:
       - microservices
     restart: unless-stopped
@@ -67,9 +67,9 @@ services:
       - ./characters:/app
       - /characters/node_modules
     expose:
-      - 3002
+      - 3003
     ports:
-      - '3002:3002'
+      - '3003:3003'
     networks:
       - microservices
     restart: unless-stopped
@@ -91,9 +91,9 @@ services:
       - ./gateway:/app
       - /gateway/node_modules
     expose:
-      - 8080
+      - 80
     ports:
-      - '8080:8080'
+      - '80:80'
     networks:
       - microservices
     restart: unless-stopped
@@ -106,6 +106,30 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    networks:
+      - microservices
+    restart: unless-stopped
+  rss:
+    build:
+      context: ./rss
+      dockerfile: Dockerfile
+      target: development
+    container_name: rss
+    command: npm run start:dev
+    env_file:
+      - ./rss/.env
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
+      - rabbitmq
+    volumes:
+      - ./rss:/app
+      - /rss/node_modules
+    expose:
+      - 3004
+    ports:
+      - '3004:3004'
     networks:
       - microservices
     restart: unless-stopped
