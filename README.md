@@ -1,4 +1,4 @@
-# NestJS Cloud
+# ExpressJS Cloud
 
-## Cloud project using NestJS.
+## Cloud project using ExpressJS and Typescript.
 by Jacob Schmidt (https://github.com/jschmidt92)
