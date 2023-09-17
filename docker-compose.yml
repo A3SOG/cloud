@@ -130,6 +130,18 @@ services:
     networks:
       - microservices
     restart: unless-stopped
+  arma-redis:
+    image: redis:latest
+    container_name: arma-redis
+    command: --requirepass ${REDIS_PASSWORD}
+    expose:
+      - 6379
+    ports:
+      - '6379:6379'
+    env_file: .env
+    networks:
+      - microservices
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
