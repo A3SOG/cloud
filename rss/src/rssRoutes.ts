@@ -4,13 +4,15 @@ import {
   createRssItem,
   getRssItemById,
   deleteRssItem,
-  updateRssItem
+  updateRssItem,
+  getLatesRssItem
 } from './rssController'
 
 const router = express.Router()
 
 router.get('/', getRssItems)
 router.post('/', createRssItem)
+router.get('/latest', getLatesRssItem)
 router.get('/:id', getRssItemById)
 router.patch('/:id', updateRssItem)
 router.delete('/:id', deleteRssItem)

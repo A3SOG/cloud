@@ -81,6 +81,21 @@ class RssRepository {
       throw e
     }
   }
+
+  async findLatest(): Promise<any> {
+    try {
+      const latestItem = await RssModel.findOne().sort({ date: -1 }).exec();
+
+      if (!latestItem) {
+        return null;
+      }
+
+      return latestItem;
+    } catch (e) {
+      console.error("Failed to fetch the latest RSS Item:", e);
+      throw e;
+    }
+  }
 }
 
 export default RssRepository

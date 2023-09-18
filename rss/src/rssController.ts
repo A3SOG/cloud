@@ -117,10 +117,31 @@ const deleteRssItem = asyncHandler(async (req: Request, res: Response) => {
   }
 })
 
+const getLatesRssItem = asyncHandler(async (req: Request, res: Response) => {
+  const row = await rssService.getLatestRssItem()
+
+  try {
+    if (row) {
+      res.status(200).json(row)
+    } else {
+      res.status(404)
+      throw new Error('Failed to fetch the latest RSS Item')
+    }
+  } catch (e) {
+    res.status(500)
+    if (e instanceof Error) {
+      throw new Error(e.message)
+    } else {
+      throw e
+    }
+  }
+})
+
 export {
   getRssItems,
   createRssItem,
   getRssItemById,
   updateRssItem,
-  deleteRssItem
+  deleteRssItem,
+  getLatesRssItem
 }
