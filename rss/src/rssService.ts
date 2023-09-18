@@ -26,6 +26,10 @@ class RssService {
   async deleteRssItem(id: string): Promise<any> {
     return await this.rssRepository.delete(id)
   }
+
+  async getLatestRssItem(): Promise<any | null> {
+    return await this.rssRepository.findLatest()
+  }
 }
 
 export default RssService
