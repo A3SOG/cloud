@@ -56,7 +56,7 @@ class RssRepository {
   ): Promise<any> {
     try {
       if (!data.date) {
-        data.date = new Date();
+        data.date = new Date()
       }
       const rss = await RssModel.findOneAndUpdate({ _id }, data, {
         new: true

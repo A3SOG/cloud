@@ -22,14 +22,14 @@ const createRssItem = asyncHandler(async (req: Request, res: Response) => {
 
 const getRssItems = asyncHandler(async (req: Request, res: Response) => {
   const feed = new Feed({
-    title: "SOG Rss Feed",
-    description: "A simple Rss feed for SOG",
-    language: "en",
-    feed_url: "",
-    site_url: ""
+    title: 'SOG Rss Feed',
+    description: 'A simple Rss feed for SOG',
+    language: 'en',
+    feed_url: '',
+    site_url: ''
   })
   const rows = await rssService.getRssItems()
-  rows.forEach(item => {
+  rows.forEach((item) => {
     feed.item({
       title: item.title,
       description: item.description,
@@ -117,4 +117,10 @@ const deleteRssItem = asyncHandler(async (req: Request, res: Response) => {
   }
 })
 
-export { getRssItems, createRssItem, getRssItemById, updateRssItem, deleteRssItem }
+export {
+  getRssItems,
+  createRssItem,
+  getRssItemById,
+  updateRssItem,
+  deleteRssItem
+}

@@ -29,32 +29,50 @@ export default (config: any) => {
     })
 
     const refreshServiceInfo = async () => {
-      serviceHelper.getServiceInfo('org.sog.hq.auth')
-        .then(authInfo => {
-          serviceHelper.getServiceInfo('org.sog.hq.blog')
-            .then(blogInfo => {
-              serviceHelper.getServiceInfo('org.sog.hq.character')
-                .then(characterInfo => {
-                  serviceHelper.getServiceInfo('org.sog.hq.rss')
-                    .then(rssInfo => {
-                      service.use('/users', proxy(`http://${authInfo.ip}:${authInfo.port}`))
-                      service.use('/blog', proxy(`http://${blogInfo.ip}:${blogInfo.port}`))
-                      service.use('/characters', proxy(`http://${characterInfo.ip}:${characterInfo.port}`))
-                      service.use('/rss', proxy(`http://${rssInfo.ip}:${rssInfo.port}`))
+      serviceHelper
+        .getServiceInfo('org.sog.hq.auth')
+        .then((authInfo) => {
+          serviceHelper
+            .getServiceInfo('org.sog.hq.blog')
+            .then((blogInfo) => {
+              serviceHelper
+                .getServiceInfo('org.sog.hq.character')
+                .then((characterInfo) => {
+                  serviceHelper
+                    .getServiceInfo('org.sog.hq.rss')
+                    .then((rssInfo) => {
+                      service.use(
+                        '/users',
+                        proxy(`http://${authInfo.ip}:${authInfo.port}`)
+                      )
+                      service.use(
+                        '/blog',
+                        proxy(`http://${blogInfo.ip}:${blogInfo.port}`)
+                      )
+                      service.use(
+                        '/characters',
+                        proxy(
+                          `http://${characterInfo.ip}:${characterInfo.port}`
+                        )
+                      )
+                      service.use(
+                        '/rss',
+                        proxy(`http://${rssInfo.ip}:${rssInfo.port}`)
+                      )
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       log.error('Error setting up proxies:', error)
                     })
                 })
-                .catch(error => {
+                .catch((error) => {
                   log.error('Error setting up proxies:', error)
                 })
             })
-            .catch(error => {
+            .catch((error) => {
               log.error('Error setting up proxies:', error)
             })
         })
-        .catch(error => {
+        .catch((error) => {
           log.error('Error setting up proxies:', error)
         })
     }

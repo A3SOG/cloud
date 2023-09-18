@@ -8,7 +8,7 @@ const RssSchema = new Schema({
   guid: { type: String, required: false }
 })
 
-RssSchema.pre('save', function(this: any, next) {
+RssSchema.pre('save', function (this: any, next) {
   if (!this.guid) {
     this.guid = this._id.toString()
   }
