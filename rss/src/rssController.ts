@@ -34,7 +34,8 @@ const getRssItems = asyncHandler(async (req: Request, res: Response) => {
       title: item.title,
       description: item.description,
       url: item.url,
-      date: item.date
+      date: item.date,
+      guid: item.guid
     })
   })
 

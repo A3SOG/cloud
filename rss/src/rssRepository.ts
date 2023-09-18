@@ -12,7 +12,7 @@ class RssRepository {
   async create({
     title,
     description,
-    date,
+    date = new Date(),
     url
   }: {
     title: string
@@ -55,6 +55,9 @@ class RssRepository {
     }
   ): Promise<any> {
     try {
+      if (!data.date) {
+        data.date = new Date();
+      }
       const rss = await RssModel.findOneAndUpdate({ _id }, data, {
         new: true
       })

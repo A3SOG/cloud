@@ -1,6 +1,14 @@
 import mongoose from 'mongoose'
 import RssSchema from './rssSchema'
 
-const RSSModel = mongoose.model('rss', RssSchema)
+export interface IRss extends Document {
+    title: string
+    description: string
+    date: Date
+    url: string
+    guid: string
+}
 
-export default RSSModel
+const RssModel = mongoose.model<IRss>('Rss', RssSchema)
+
+export default RssModel
