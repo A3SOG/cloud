@@ -23,6 +23,10 @@ class CharacterService {
   async getMessagesByKey(key: string) {
     return await this.characterRepository.findMessagesByKey(key)
   }
+
+  async getEmailsByKey(key: string) {
+    return await this.characterRepository.findEmailsByKey(key)
+  }
 }
 
 export default CharacterService

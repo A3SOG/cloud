@@ -35,7 +35,7 @@ class BlogService {
   }
 
   async fetchAuthorDetails(id: string): Promise<any> {
-    const url = `http://135.135.196.140/users/${id}`
+    const url = `http://192.168.4.21/users/${id}`
 
     try {
       const response = await axios.get(url)

@@ -31,7 +31,7 @@ let characterServiceClient: any
 // setInterval(refreshCharacterService, 60 * 1000);
 
 characterServiceClient = axios.create({
-  baseURL: 'http://135.135.196.140/characters'
+  baseURL: 'http://192.168.4.21/characters'
 })
 
 interface CharacterClient {
@@ -39,6 +39,7 @@ interface CharacterClient {
   getArmory(uid: string, index?: number): Promise<any>
   getGarage(uid: string, index?: number): Promise<any>
   getMessages(uid: string): Promise<any>
+  getEmails(uid: string): Promise<any>
 }
 
 const CharacterService: CharacterClient = {
@@ -61,6 +62,12 @@ const CharacterService: CharacterClient = {
     const pre_number = uid.slice(-6)
     const key = '0160' + pre_number
     return await characterServiceClient.get(`/${key}/messages`)
+  },
+
+  async getEmails(uid: string) {
+    const pre_number = uid.slice(-6)
+    const key = '0160' + pre_number + '@spearnet.mil'
+    return await characterServiceClient.get(`/${key}/emails`)
   }
 }
 

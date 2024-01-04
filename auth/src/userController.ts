@@ -132,6 +132,8 @@ const getCharacterByUserId = asyncHandler(
     // };
     // producer(JSON.stringify(msg));
 
+    console.log(row)
+
     if (!row) {
       res.status(404)
       throw new Error(`Cannot find user with ID ${id}`)
@@ -169,13 +171,22 @@ const getCharacterByUserId = asyncHandler(
     } catch (e) {
       console.error('Error fetching message data:', e)
     }
+  
+    let emailData
+    try {
+      const response = await CharacterService.getEmails(uid)
+      emailData = response.data
+    } catch (e) {
+      console.error('Error fetching email data:', e)
+    }
 
     res.status(200).json({
       // user: row,
       character: characterData,
       armory_unlocks: armoryData,
       garage_unlocks: garageData,
-      messages: messageData
+      messages: messageData,
+      emails: emailData
     })
   }
 )

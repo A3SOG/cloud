@@ -15,14 +15,14 @@ services:
       - './servermods:/arma3/servermods'
     env_file: .env
     restart: unless-stopped
-    depends_on:
-      - arma-redis
+    # depends_on:
+    #   - arma-redis
 
-  arma-redis:
-    image: redis:alpine
-    container_name: ArmARedis
-    command: --requirepass ${REDIS_PASSWORD}
-    ports:
-      - 6379:6379
-    env_file: .env
-    restart: unless-stopped
+  # arma-redis:
+  #   image: redis:alpine
+  #   container_name: ArmARedis
+  #   command: --requirepass ${REDIS_PASSWORD}
+  #   ports:
+  #     - 6379:6379
+  #   env_file: .env
+  #   restart: unless-stopped

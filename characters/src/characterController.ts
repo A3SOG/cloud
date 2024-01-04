@@ -88,4 +88,25 @@ const getMessagesByKey = asyncHandler(async (req: Request, res: Response) => {
   }
 })
 
-export { getCharacterByKey, getMessagesByKey, getArmoryByKey, getGarageByKey }
+const getEmailsByKey = asyncHandler(async (req: Request, res: Response) => {
+  const key = req.params.key
+  const row = await characterService.getEmailsByKey(key)
+
+  try {
+    if (row.length > 0) {
+      res.status(200).json(row)
+    } else {
+      res.status(404)
+      throw new Error(`Cannot find email with KEY ${key}`)
+    }
+  } catch (e) {
+    res.status(500)
+    if (e instanceof Error) {
+      throw new Error(e.message)
+    } else {
+      throw e
+    }
+  }
+})
+
+export { getCharacterByKey, getEmailsByKey, getMessagesByKey, getArmoryByKey, getGarageByKey }

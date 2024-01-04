@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import {
   getArmoryByKey,
   getCharacterByKey,
+  getEmailsByKey,
   getGarageByKey,
   getMessagesByKey
 } from './characterController'
@@ -13,6 +14,7 @@ router.get('/', (req: Request, res: Response) => {
 })
 router.get('/:key', getCharacterByKey)
 router.get('/:key/armory', getArmoryByKey)
+router.get('/:key/emails', getEmailsByKey)
 router.get('/:key/garage', getGarageByKey)
 router.get('/:key/messages', getMessagesByKey)
 

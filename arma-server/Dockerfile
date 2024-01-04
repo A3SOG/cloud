@@ -4,14 +4,29 @@ FROM debian:bullseye-slim
 RUN apt-get update && \
   apt-get install -y --no-install-recommends --no-install-suggests \
   ca-certificates \
+  libc6 \
   lib32gcc-s1 \
+  libgssapi-krb5-2 \
+  libicu67 \
+  libssl1.1 \
   lib32stdc++6 \
+  zlib1g \
   libcurl4 \
   locales \
   python3 \
   python3-pip \
+  gpg \
   wget && \
   rm -rf /var/lib/apt/lists/*
+
+# Install .NET
+# RUN wget -O - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o microsoft.asc.gpg \
+#   mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/ \
+#   wget https://packages.microsoft.com/config/debian/{os-version}/prod.list \
+#   mv prod.list /etc/apt/sources.list.d/microsoft-prod.list \
+#   apt-get update && \
+#     apt-get install -y {dotnet-package}
+
 
 # Enable the en_US.UTF-8 locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \

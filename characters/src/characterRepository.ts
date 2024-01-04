@@ -60,6 +60,11 @@ class CharacterRepository {
     const listData = await redisClient.lrange(key, 0, -1)
     return listData
   }
+
+  async findEmailsByKey(key: string) {
+    const listData = await redisClient.lrange(key, 0, -1)
+    return listData
+  }
 }
 
 export default CharacterRepository

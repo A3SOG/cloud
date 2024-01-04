@@ -21,6 +21,7 @@ class CharacterModel {
     data: { classname: '', magazine: '', handgunitems: [], rounds: 0 }
   }
   phone_number: number = 0
+  email: string = ''
   rating: number = 0
   position: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }
   direction: number = 0
@@ -102,6 +103,9 @@ class CharacterModel {
           break
         case 'Phone_Number':
           this.phone_number = value as number
+          break
+        case 'Email':
+          this.email = value as string
           break
         case 'Rating':
           this.rating = value as number
