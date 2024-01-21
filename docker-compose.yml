@@ -134,7 +134,9 @@ services:
   arma-redis:
     image: redis:latest
     container_name: arma-redis
-    command: --requirepass ${REDIS_PASSWORD}
+    command: --requirepass ${REDIS_PASSWORD} --save 30 1
+    volumes:
+      - arma-redis_data:/data
     expose:
       - 6379
     ports:
@@ -184,4 +186,6 @@ services:
 
 volumes:
   mongodb-master_data:
+    driver: local
+  arma-redis_data:
     driver: local
