@@ -15,7 +15,7 @@
   "author": "Jacob Schmidt",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "bunyan": "^1.8.15",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
